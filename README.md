@@ -1,107 +1,86 @@
-Scanner sc = new Scanner(System.in);
+System.out.print("Ingrese ID a modificar: ");
+                    String modificar = sc.nextLine();
+                    int posMod = -1;
 
-        String[] ids = new String[100];
-        String[] productos = new String[100];
-        int[] cantidades = new int[100];
-        double[] precios = new double[100];
-        int totalVentas = 0;
-
-        while (true) {
-            System.out.println("\n--- MENÚ ---");
-            System.out.println("1. Crear venta");
-            System.out.println("2. Listar ventas");
-            System.out.println("3. Buscar por ID");
-            System.out.println("4. Modificar venta");
-            System.out.println("5. Eliminar venta");
-            System.out.println("6. Calcular total");
-            System.out.println("7. Salir");
-            System.out.print("Elija opción: ");
-
-            String opcion = sc.nextLine();
-
-            switch (opcion) {
-                case "1":
-                    if (totalVentas >= 100) {
-                        System.out.println("No se pueden agregar más ventas.");
-                        continue;
-                    }
-
-                    System.out.print("Ingrese ID: ");
-                    String id = sc.nextLine();
-
-                    // Verificar que no se repita
-                    boolean repetido = false;
                     for (int i = 0; i < totalVentas; i++) {
-                        if (ids[i].equals(id)) {
-                            repetido = true;
+                        if (ids[i].equals(modificar)) {
+                            posMod = i;
                             break;
                         }
                     }
 
-                    if (repetido) {
-                        System.out.println("Ese ID ya existe.");
+                    if (posMod == -1) {
+                        System.out.println("ID no encontrado.");
                         continue;
                     }
 
-                    System.out.print("Producto: ");
-                    String producto = sc.nextLine();
+                    System.out.print("Nuevo producto: ");
+                    productos[posMod] = sc.nextLine();
 
-                    System.out.print("Cantidad: ");
-                    int cantidad;
+                    System.out.print("Nueva cantidad: ");
                     try {
-                        cantidad = Integer.parseInt(sc.nextLine());
+                        cantidades[posMod] = Integer.parseInt(sc.nextLine());
                     } catch (Exception e) {
                         System.out.println("Cantidad inválida.");
                         continue;
                     }
 
-                    System.out.print("Precio unitario: ");
-                    double precio;
+                    System.out.print("Nuevo precio: ");
                     try {
-                        precio = Double.parseDouble(sc.nextLine());
+                        precios[posMod] = Double.parseDouble(sc.nextLine());
                     } catch (Exception e) {
                         System.out.println("Precio inválido.");
                         continue;
                     }
 
-                    ids[totalVentas] = id;
-                    productos[totalVentas] = producto;
-                    cantidades[totalVentas] = cantidad;
-                    precios[totalVentas] = precio;
-                    totalVentas++;
-
-                    System.out.println("Venta registrada.");
+                    System.out.println("Venta modificada.");
                     break;
 
-                case "2":
-                    if (totalVentas == 0) {
-                        System.out.println("No hay ventas registradas.");
-                    } else {
-                        for (int i = 0; i < totalVentas; i++) {
-                            System.out.println("ID: " + ids[i] +
-                                    ", Producto: " + productos[i] +
-                                    ", Cantidad: " + cantidades[i] +
-                                    ", Precio: " + precios[i]);
-                        }
-                    }
-                    break;
+                case "5":
+                    System.out.print("Ingrese ID a eliminar: ");
+                    String eliminar = sc.nextLine();
+                    int posDel = -1;
 
-                case "3":
-                    System.out.print("Ingrese ID a buscar: ");
-                    String buscar = sc.nextLine();
-                    boolean encontrado = false;
                     for (int i = 0; i < totalVentas; i++) {
-                        if (ids[i].equals(buscar)) {
-                            System.out.println("ID: " + ids[i] +
-                                    ", Producto: " + productos[i] +
-                                    ", Cantidad: " + cantidades[i] +
-                                    ", Precio: " + precios[i]);
-                            encontrado = true;
+                        if (ids[i].equals(eliminar)) {
+                            posDel = i;
                             break;
                         }
                     }
 
-                    if (!encontrado) {
-                        System.out.println("Venta no encontrada.");
+                    if (posDel == -1) {
+                        System.out.println("ID no encontrado.");
+                        continue;
                     }
+
+                    // Desplazar todo para eliminar
+                    for (int i = posDel; i < totalVentas - 1; i++) {
+                        ids[i] = ids[i + 1];
+                        productos[i] = productos[i + 1];
+                        cantidades[i] = cantidades[i + 1];
+                        precios[i] = precios[i + 1];
+                    }
+
+                    totalVentas--;
+                    System.out.println("Venta eliminada.");
                     break;
+
+                case "6":
+                    double total = 0;
+                    for (int i = 0; i < totalVentas; i++) {
+                        total += cantidades[i] * precios[i];
+                    }
+                    System.out.println("Ingreso total: $" + total);
+                    break;
+
+                case "7":
+                    System.out.println("Saliendo del programa...");
+                    return;
+
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
+            }
+        }
+    }
+}
